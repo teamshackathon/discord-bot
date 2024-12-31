@@ -1,0 +1,7 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: team-hackathon
+  labels:
+    name: team-hackathon
+    

@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: team-hackathon-devops-deployment
+  namespace: team-hackathon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: team-hackathon-devops-pod
+  template:
+    metadata:
+      labels:
+        app: team-hackathon-devops-pod
+    spec:
+      serviceAccountName: devops-service-account
+      containers:
+        - name: devops
+          image: ghcr.io/longlangu/arm32v7/devops:latest
+          resources:
+            limits:
+              cpu: "60m"
+              memory: "64Mi"
+          env:
+            - name: REPO_URL
+              value: https://github.com/teamshackathon/discord-bot.git
+            - name: BRANCH
+              value: main
+            - name: DEPLOYMENT
+              value: team-hackathon-deployment
+            - name: GOOSE_DRIVER
+              value: postgres
+            - name: POSTGRES_HOST
+              value: postgresql-service.discord-db.svc.cluster.local
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: team-hackathon-discord-bot-secret
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: team-hackathon-discord-bot-secret
+                  key: postgres_password
+            - name: POSTGRES_DB
+              value: teamshackathon
