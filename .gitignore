@@ -1,0 +1,6 @@
+# Secret keys
+**/*secret*
+
+# cache
+.ruff_cache
+**/__pycache__
